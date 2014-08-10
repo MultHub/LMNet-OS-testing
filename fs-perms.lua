@@ -56,6 +56,7 @@ function fs.setPermissions(file, newPermissions)
 	
 	if permissions[file] and type(permissions[file]) == "table" then
 		permissions[file] = {r = permissions[file].r, w = permissions[file].w}
+	end
 	
 	local f = oldfs.open(".lmnet/.fsdata", "w") -- local4ever; TODO remove crappy comments
 	f.write(textutils.serialize(permissions))
