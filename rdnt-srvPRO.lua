@@ -21,7 +21,13 @@ function loadSite(pSite)
 		return nil	
 	end
 	if data["mode"] == 'pre' then
-		return loadfile('/www/'..pSite)()
+		local ok,rtn = pcall(setfenv(loadfile(pSide),getfenv()))
+		if ok then
+			return rtn
+		else
+			printLog('SERVER ERROR AT '..pSite)
+			return 'Server Error. Sorry!'
+		end
 	elseif data["mode"] = "post" then
 		local file = fs.open("/www/"..pSide)
 		local site = file.readAll()
