@@ -12,6 +12,12 @@ end
 
 local oldfs = cloneTable(fs)
 
+if not oldfs.exists(".lmnet/.fsdata") then
+	local file = fs.open(".lmnet/.fsdata", "w")
+	file.write("{}")
+	file.close()
+end
+
 function fs.getFullPath(file)
 	local parts = {}
 	for match in string.gmatch(file, "[^/]+") do
@@ -30,7 +36,7 @@ function fs.getPermissions(file)
 	local permissions = textutils.unserialize(f.readAll())
 	f.close()
 	
-	if not permissions[file] then
+	if not fs.exists(file) then
 		fs.setPermissions(file, nil)
 		error("File not found", 1)
 	end
