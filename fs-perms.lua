@@ -51,7 +51,7 @@ function fs.setPermissions(file, newPermissions)
 	local permissions = textutils.unserialize(f.readAll())
 	f.close()
 	
-	if oldfs.exists(file) and oldfs.isDir(file) and oldfs.list(file) then
+	if oldfs.exists(file) and oldfs.isDir(file) and table.sort(oldfs.list(file)) then
 		for i, v in ipairs(table.sort(oldfs.list(file))) do
 			fs.setPermissions(v, newPermissions)
 		end
