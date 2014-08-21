@@ -105,3 +105,18 @@ function fs.delete(file)
 	end
 	return oldfs.delete(file)
 end
+function fs.isReadOnly(file)
+	if oldfs.isReadOnly(file) then
+		return true
+	end
+	if not fs.getPermissions(file).w then
+		return true
+	end
+	return false
+end
+function fs.makeDir(file)
+	if fs.getDir and not fs.getPermissions(fs.getDir(file)).w then
+		error("Access denied", 1)
+	end
+	oldfs.makeDir(file)
+end
