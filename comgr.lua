@@ -4,6 +4,7 @@ function forceExit()
 	exit = true
 end
 function run(logFunc)
+	exit = false
 	while #processList > 0 or noAutoExit do
 		if exit then
 			return
@@ -11,12 +12,7 @@ function run(logFunc)
 		if #processList > 0 then
 			local event = {os.pullEventRaw()}
 			for i, co in pairs(processList) do
-				if coroutine.status(co) == "dead" then
-					table.remove(processList, i)
-					if logFunc then
-						logFunc("Process #"..i.." died.")
-					end
-				else
+				if coroutine.status(co) ~= "dead" then
 					coroutine.resume(co, unpack(event))
 				end
 			end
