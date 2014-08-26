@@ -1,17 +1,29 @@
 local processList = {}
 local exit = false
+local noAutoExit = false
+function setAutoExit(val)
+	noAutoExit = not val
+end
 function forceExit()
 	exit = true
 end
-function run(logFunc)
+function run()
 	exit = false
-	while #processList > 0 or noAutoExit do
+	while (function()
+		local rtn = false
+		for i, co in ipairs(processList) do
+			if coroutine.status(co) ~= "dead" then
+				rtn = true
+			end
+		end
+		return rtn
+	end)() or noAutoExit do
 		if exit then
 			return
 		end
 		if #processList > 0 then
 			local event = {os.pullEventRaw()}
-			for i, co in pairs(processList) do
+			for i, co in ipairs(processList) do
 				if coroutine.status(co) ~= "dead" then
 					coroutine.resume(co, unpack(event))
 				end
